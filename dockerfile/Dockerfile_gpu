@@ -1,0 +1,154 @@
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
+
+WORKDIR /code/fastAPI
+
+RUN mkdir -p /home/user
+RUN mkdir -p /home/user/fastAPI
+WORKDIR /home/user
+
+COPY ./app /home/user/fastAPI
+
+
+RUN apt-get update && apt-get  install -y libpsl5 publicsuffix libunwind8 strace wget curl nano
+#RUN strace wget --quiet -O - http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub | apt-key add -
+
+
+RUN mkdir -p /etc/apt/keyrings/
+RUN wget -O- http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub | \
+    gpg --dearmor | \
+    tee /etc/apt/keyrings/3bf863cc.pub > /dev/null
+
+#RUN echo "deb [signed-by=/etc/apt/keyrings/3bf863cc.pub] http://developer.download.nvidia.com/apt stable main" | tee /etc/apt/sources.list.d/3bf863cc.list
+#RUN apt-key del 7fa2af80
+#RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
+
+
+#ARG DEBIAN_FRONTEND=noninteractive
+# check user id with : id -u user_name
+#docker build --build-arg NB_UID=11418 --build-arg USE_GPU=1 -f nombre_del_fichero_dockerfile -t nombre_usuario/projecto:version .
+ARG NB_USER=assistant
+ARG NB_UID=11418
+ARG NB_GID
+ARG USE_GPU=1
+ARG PYTHON_VERSION=3.7
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TERM=linux
+
+ENV TZ=Europe/Madrid
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get -y update
+RUN apt-get install -y --fix-missing \
+    build-essential \
+    wget \
+    nano \
+    htop \
+    tmux \
+    unzip \
+    zip \
+    libopencv-dev \
+    gosu \
+    git \
+    cmake \
+	ffmpeg \
+    && apt-get clean && rm -rf /tmp/* /var/tmp/* 
+
+RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh &&\
+     /opt/conda/bin/conda install -y python=$PYTHON_VERSION numpy pyyaml scipy ipython mkl mkl-include ninja cython typing && \
+     /opt/conda/bin/conda clean -ya
+
+ENV PATH /opt/conda/bin:$PATH
+
+#TTF fonts support
+RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections && apt-get install -y ttf-mscorefonts-installer  && fc-cache -f
+
+RUN apt install libopencv-dev
+
+#RUN set -xe \
+#    && apt-get update \
+#    && apt-get install python-pip -y
+
+
+
+# Install pytorch
+# Install pytorch and python requirements
+RUN pip install --upgrade pip
+RUN pip install -U pip
+RUN pip install -U setuptools
+RUN pip install setuptools-rust
+RUN pip install transformers pydub
+RUN pip install pip --upgrade
+RUN pip install pyopenssl --upgrade
+RUN pip install unicodecsv rollbar nltk librosa   inflect # support to https://github.com/BenAAndrew/Voice-Cloning-App/blob/main/synthesis/synthesis.md
+# to RUN fastapi, run container with -p 8000:8000 and then from inside the container run : uvicorn main:app --host=0.0.0.0 --port=8000 --reload
+# https://fastapi.tiangolo.com/deployment/docker/
+#RUN pip install fastapi
+#RUN pip install "uvicorn[standard]"
+RUN pip install numpy "pillow<7" matplotlib 
+RUN pip install Flask==2.1.0
+# compatibility between pytorch and torchvision versions https://pypi.org/project/torchvision/
+#con conda no funciona bien , mejor con pip https://pytorch.org/get-started/previous-versions/
+#RUN conda install pytorch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 cudatoolkit=11.3 -c pytorch -c conda-forge
+#RUN conda install pytorch==1.12.1 torchvision==0.13.0 torchaudio==0.12.0 cudatoolkit=10.2 -c pytorch
+RUN pip install torch==1.12.0+cu113 torchvision==0.13.0+cu113 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu113
+
+RUN pip install pyqt5==5.14.0 
+RUN pip install scikit-build opencv-python==4.5.1.48
+RUN python3 -m pip install pip --upgrade
+
+ENV PATH="$PATH:~/.local/bin"
+
+
+
+#Install poppler for pdf2image
+#RUN wget https://poppler.freedesktop.org/poppler-0.48.0.tar.xz && tar -xf poppler-0.48.0.tar.xz && cd poppler-0.48.0 && ./configure && make && make install
+#RUN ln -s /usr/local/bin/pdftotext /usr/bin/pdftotext && ln -s /usr/local/bin/pdftoppm /usr/bin/pdftoppm && ln -s /usr/local/lib/libpoppler.so.64 /usr/lib/libpoppler.so.64
+
+# Install extra python packages: support for pdf, xlxs, augmentations and transformers
+RUN pip install albumentations pdfplumber openpyxl unidecode PyPDF2 python-bidi matplotlib seaborn pandas
+
+# To make imshow work
+RUN pip uninstall opencv-python-headless -y
+RUN pip uninstall opencv-python -y; pip install opencv-python==4.5.1.48; pip install opencv-contrib-python==4.5.1.48
+
+#To make imshow work
+RUN pip uninstall opencv-python-headless -y
+
+
+
+RUN python3 -m pip install numpy --upgrade
+
+ENV USER_ID=$NB_UID HOME=/home/user
+RUN useradd --shell /bin/bash -u $USER_ID -o -c "" -m user && \
+    chown -R user:user $HOME && \
+    chown root:user /usr/sbin/gosu && \
+    chmod +s /usr/sbin/gosu  && \
+    echo "alias sudo='gosu root'" >> /etc/bash.bashrc
+
+RUN pip install psutil tensorboard  requests grequests
+# bidi
+RUN pip install python-bidi
+
+# fastapi
+RUN pip install fastapi
+
+# uvicorn
+RUN pip install "uvicorn[standard]"
+
+# multipart
+RUN pip install python-multipart
+
+#https://github.com/openai/whisper/discussions/487#discussioncomment-4090095
+RUN pip uninstall ffmpeg
+RUN pip uninstall ffmpeg-python
+RUN pip install ffmpeg-python  #libsndfile1
+
+#ultralytics
+RUN pip install tqdm thop gitpython
+
+RUN pip install openai TTS
+
