@@ -7,6 +7,27 @@ A chat-sonic based voice assisstant
 ## Installation
 Windows Host:
 
+1. Install python 3.7 in the host
+2. Install the following packages
+  ```
+  pip install requests  #synchronous for fastapi calls
+  pip install grequests  #asynchronous requests
+  pip install playsound==1.2.2 #to reproduce .wave files
+  pip install pyaudio  # to save .wave files
+  ```
+3. Clone https://github.com/coqui-ai/TTS repository in a folder that will be shared between host and container
+4. Clone https://github.com/openai/whisper repository in a folder that will be shared between host and container
+5. Build provided dockerfile
+6. Run dockerfile with provided script run.sh, modifying the paths in a convenient way.
+7. Once in the container go to the folder where main.py is
+8. change key-api by one of your own in sendquery.py
+9. launch this command to run fastapi server:
+  ```
+  uvicorn main:app --host=0.0.0.0 --port=8000 --reload
+  ```
+10. From host launch the assistant.py script
+
+
 Linux Host:
 ```
 Todo
