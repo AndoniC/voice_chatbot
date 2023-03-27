@@ -9,9 +9,7 @@ Windows Host:
 
 Linux Host:
 ```
-git status
-git add
-git commit
+Todo
 ```
 ## Task List
 - [ ] create c++ client for host
