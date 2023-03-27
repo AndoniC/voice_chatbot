@@ -1,4 +1,4 @@
-# voice_assistant
+# voice_chatbot
 A chat-sonic based voice assisstant
 
 
@@ -16,4 +16,5 @@ Todo
 - [ ] add engines models for TTS
 - [ ] take into account the input language when selecting TTS voice to generate the output audio file
 - [ ] Copy models in the docker image so that it is not neccesary to download them when launching fastapi server
+- [ ] Convert the chatbot into an assistant :-)
 
