@@ -22,9 +22,12 @@ Windows Host:
 C:\> build elleanor/chatbot:1.0
 ```
 7. Run dockerfile with provided script run.sh, modifying the paths in a convenient way.
-8. Once in the container go to the folder where main.py is
-9. change key-api by one of your own in sendquery.py
-10. launch this command to run fastapi server:
+```
+run_cpu [ip/adapter identifier:0.0] [media_dir]  [code_dir] [models_dir] [libs dir] [repos_dir] [build dir]
+```
+9. Once in the container go to the folder where main.py is
+10. change key-api by one of your own in sendquery.py
+11. launch this command to run fastapi server:
   ```
   uvicorn main:app --host=0.0.0.0 --port=8000 --reload
   ```
