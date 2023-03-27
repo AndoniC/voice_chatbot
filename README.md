@@ -34,7 +34,7 @@ run_cpu [ip/adapter identifier:0.0] [media_dir]  [code_dir] [models_dir] [libs d
 10. From host launch the assistant.py script
 
 
-Linux Host:__
+Linux Host:
 
 Not tested but it should work in a similar way.
 
