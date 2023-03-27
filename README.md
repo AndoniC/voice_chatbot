@@ -35,13 +35,14 @@ run_cpu [ip/adapter identifier:0.0] [media_dir]  [code_dir] [models_dir] [libs d
 
 
 Linux Host:
-```
-Todo
-```
+Not tested but it should work in a similar way.
+
 ## Task List
 - [ ] create c++ client for host
-- [ ] add engines models for TTS
+- [ ] add different tts engine models for generating wave
 - [ ] take into account the input language when selecting TTS voice to generate the output audio file
-- [ ] Copy models in the docker image so that it is not neccesary to download them when launching fastapi server
-- [ ] Convert the chatbot into an assistant :-)
+- [ ] copy models in the docker image so that it is not neccesary to download them when launching fastapi server
+- [ ] convert the chatbot into an assistant :-)
+- [ ] test in linux
+
 
