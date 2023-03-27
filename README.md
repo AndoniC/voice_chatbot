@@ -17,11 +17,14 @@ Windows Host:
   ```
 3. Clone https://github.com/coqui-ai/TTS repository in a folder that will be shared between host and container
 4. Clone https://github.com/openai/whisper repository in a folder that will be shared between host and container
-5. Build provided dockerfile
-6. Run dockerfile with provided script run.sh, modifying the paths in a convenient way.
-7. Once in the container go to the folder where main.py is
-8. change key-api by one of your own in sendquery.py
-9. launch this command to run fastapi server:
+5. Build provided dockerfile calling the build.bat script
+```
+C:\> build elleanor/chatbot:1.0
+```
+7. Run dockerfile with provided script run.sh, modifying the paths in a convenient way.
+8. Once in the container go to the folder where main.py is
+9. change key-api by one of your own in sendquery.py
+10. launch this command to run fastapi server:
   ```
   uvicorn main:app --host=0.0.0.0 --port=8000 --reload
   ```
