@@ -37,7 +37,7 @@ run_cpu [ip/adapter identifier:0.0] [media_dir]  [code_dir] [models_dir] [libs d
 Linux Host:
 Not tested but it should work in a similar way.
 
-## Task List
+## Tasks List
 - [ ] create c++ client for host
 - [ ] add different tts engine models for generating wave
 - [ ] take into account the input language when selecting TTS voice to generate the output audio file
