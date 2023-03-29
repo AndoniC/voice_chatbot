@@ -14,8 +14,6 @@ echo run_cpu [ip/adapter identifier:0.0] [media_dir]  [code_dir] [models_dir] [l
 echo: 
 echo Example: run "Ethernet adapter Ethernet"  F:\MEDIA D:\code F:\models F:\libs
 echo          HOME:: run 192.168.1.57:0.0 F:\MEDIA D:\andoni\code F:\models D:\libs D:\repos D:\andoni\builds\linux
-echo          WORK:: run 192.168.110.102:0.0  D:\media H:\code D:\models H:\libs H:\python_repos H:\builds\x64\linux  
-echo          HALK:: ./run.sh   D:\media H:\code D:\models H:\python_repos   
 echo:
 )else (
 

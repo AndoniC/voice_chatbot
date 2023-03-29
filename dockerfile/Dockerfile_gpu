@@ -148,7 +148,11 @@ RUN pip uninstall ffmpeg-python
 RUN pip install ffmpeg-python  #libsndfile1
 
 #ultralytics
-RUN pip install tqdm thop gitpython
+RUN pip install tqdm thop gitpython 
+#Bing chat
+RUN pip install EdgeGPT --upgrade
+RUN pip install typing_extensions
 
+#Openai api and TTS
 RUN pip install openai TTS
 

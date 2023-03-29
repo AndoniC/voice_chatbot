@@ -1,5 +1,6 @@
 import openai
 import requests
+from os import environ
 api_endpoint= "https://api.openai.com/v1/completions"
 api_key = "YOUR_OPENAI_KEY"
 
@@ -56,3 +57,23 @@ def querychatSonic(query_text) :
     response = requests.post(api_endpoint,json=payload, headers=request_headers) #data=json.dumps(request_data))    
     print(response.json()["message"])
     return response.json()["message"]
+
+
+#with requests into Bing
+# https://github.com/ChaoticByte/ChatGPT-PyAPI/blob/main/cli.py
+# EdgeGPT must be installed and modify
+# Remember adding this to EdgeGPT.py
+#import sys
+#if sys.version_info >= (3, 8):
+#    from typing import Literal
+#else:
+#    from typing_extensions import Literal
+# and to generate cookies, go to bing.com in firefox and use the extension  https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/ to export a json with cookies
+
+# from bing import ChatGPT, Message, ConversationStyle
+# def querychatBing(cookies, query_text) :
+#     BING_COOKIES_FILE = cookiePath=cookies
+#     environ["BING_COOKIES_FILE"] = cookiePath=cookies
+#     cgpt = ChatGPT(BING_COOKIES_FILE, ConversationStyle.balanced)
+#     res = cgpt.chat(Message(query_text))
+#     return res.text
