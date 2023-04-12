@@ -8,6 +8,11 @@ import os
 from whispering import whisper_text
 from sendquery import *
 from speakingOutLoud import speakOutLoud
+
+#to accept body parameters in the POST request
+# https://stackoverflow.com/questions/59929028/python-fastapi-error-422-with-post-request-when-sending-json-data
+from pydantic import BaseModel
+
 #import rollbar
 
 def check_extension(filename):
@@ -29,8 +34,23 @@ app = FastAPI(
 
 @app.get("/")
 def read_root():
-    time.sleep(10.4)
+    time.sleep(1)
     return {"Hello": "World"}
+
+
+class Data(BaseModel):
+    val: str
+# with Body parameters
+@app.post("/test", tags = ["testing POST in server"])
+def test(name:Data,surname: Data):
+    time.sleep(1)
+    return {"Hello": name.val + "  "+ surname.val}
+
+#with path parameters   
+@app.post("/test1", tags = ["testing POST in server"])
+def test1(name:str,surname: str):
+    time.sleep(1)
+    return {"Hello": name + "  "+ surname}
 	
 @app.post("/email_analyzer", tags = ["Email"])
 async def root(files: List[UploadFile] = File(...)):

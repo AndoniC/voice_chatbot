@@ -1,8 +1,11 @@
+#From https://github.com/coqui-ai/TTS
 from TTS.api import TTS
 import os
 
 # List available 🐸TTS models and choose the first one
-model_name = TTS.list_models()[0]
+model_name = TTS.list_models()[1]
+print(TTS.list_models())
+print ("Loading model : " + model_name)
 # Init TTS
 tts = TTS(model_name)
  
